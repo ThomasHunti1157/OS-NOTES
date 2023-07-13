@@ -1,0 +1,275 @@
+xfreerdp /u:student /v:10.50.38.32 /dynamic-resolution +glyph-cache +clipboard
+
+Get-Command type cmdlet | Sort-Object -property Noun | ft -groupby Noun 
+Get-Process | Get-Member | Where-Object {$_.membertype -match "Property"}
+(get-process calculator*).kill()
+get-process | select-object name,id,path | where-bject {$_.id -lt '1000'}
+
+(get-process | select-object name,id,path | where-bject {$_.id -lt '1000'}).count
+
+get-cimclass *
+
+get-ciminstance -classname win32_logicaldisk 
+
+get-ciminstance -classname win32_logicaldisk -filter "drivetype=3"
+get-ciminstance -classname win32_logicaldisk -filter "drivetype=3" | get-member
+get-wmiobject -class win32_logicaldisk 
+get-wmiobject -class win32_logicaldisk -filter "Drivetype=3"
+
+get-executionpolicy -list
+set-executionpolicy -Executionpolicy urestricted -scope CurrentUser
+
+PERSISTENCE
+
+$profile   (path to profile) current user current host
+test-path -path $profile.allusersallhosts
+
+new-item -itemtype file -path $profile -force
+
+to open profile : ISE $profile  **save scripts in this profile when this user or profile logs in scripts will run through that profile automatically
+
+POWERSHELL REMOTING
+
+winrm is manager
+wrsm is the protocol
+
+get-item WSMan:\localhost\Client\TrustedHosts
+set-item WSMan:\localhost\Client\TrustedHosts -value "file-server, domain-control, workstation2"
+
+$session new-pssession -computername workstation2 -credential andy.dwyer
+invoke-command -computername file-server (get-service)     -obtain this command from the given system
+
+invoke-command -computername file-server,domain-control {get-process} -asjob   *gives as job id then remember job id and drop the number to get command
+
+DOWNLOADING 
+
+$url = "http://downloads.volatilityfoundation.org/releases/2.6/volatility_2.6_win64_standalone.zip"
+$output = "$PSScriptRoot\volatility_2.6_win64_standalone.zip"
+$start_time = Get-Date
+
+$wc = New-Object System.Net.WebClient 
+$wc.DownloadFile($url, $output) 
+
+Admin Station : 14 (10.50.34.65)
+Workstation1 : (10.14.0.5)
+
+##REGISTRY
+
+    regedit.exe
+
+        GUI
+
+        Located at "C:\Windows\regedit.exe"
+
+    reg.exe
+
+        CLI
+
+        Located at "C:\Windows\System32\reg.exe"
+
+        Minimum commands to know
+
+            Reg add, reg query, reg delete
+
+Root hive keys loaded as powershell drives
+
+Commands:     get-item, get-itemproperty, get-childitem
+
+    set-itemproperty, new-item, new-itemproperty
+
+Mounting Remote Registry :
+  Open the Regedit GUI
+Click on *File* => *Connect Network Registry*
+Type *File-Server*
+Click on *Check Names* Button (File-Server will become underlined)
+Click *OK*
+
+Registry changes often require a restart
+
+Foresncialy relevant keys : internet url history, usb history, wirless access point history
+
+Keys that can be utitlized for peristence:
+    HKLM\Software\Microsoft\Windows\CurrentVersion\Run
+
+    HKU\<SID>\Software\Microsoft\Windows\CurrentVersion\Run
+
+    HKLM\SYSTEM\CurrentControlSet\services
+
+    HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Shell Folders
+
+    HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\User Shell Folders
+
+    HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon
+
+
+
+HKU\<SID>\Software\Policies\Microsoft\Windows\System\Scripts
+
+    Group policy Logon/Logoff Scripts defined here
+
+HKLM is registry for all hardware system and security**
+
+HKCU - 18 - local system account
+       19 - 
+       20
+HKEY current config - 
+HKEY Classes Root  - symbolic link to classes software ...
+
+
+Commands
+
+reg query HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Run
+
+
+
+reg add HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Run /v testme /t REG_SZ /d C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe
+
+    The /v stands for Value; In this case the name of this Key Value.
+
+    The /t stands for Type; Types can be any of the Data Types that we went over earlier.
+
+    The /d stands for Data; Is what is the actual Data or in this case a command to open a file every time the system is ran.
+
+reg delete HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Run /v testme
+
+
+Minimum command knowledge:
+
+
+Minimum commands to know
+
+    Query
+
+        Get-ChildItem cmdlet gets the items in one or more specified locations.
+
+        Get-ItemProperty cmdlet gets the items in one or more specified locations.
+
+        Get-Item cmdlet gets the item at the specified location. It doesn’t get the contents of the item at the location unless you use a wildcard character (*) to request all the contents of the item.
+
+    Modify
+
+        Set-ItemProperty cmdlet changes the value of the property of the specified item. example, changing setting to :true or :false.
+
+        Remove-ItemProperty cmdlet to delete registry values and the data that they store.
+
+    Create
+
+        New-Item cmdlet creates a new item and sets its value. In the registry, New-Item creates registry keys and entries.
+
+        New-Itemproperty cmdlet creates a new property for a specified item and sets its value. Typically, this cmdlet is used to create new registry values, because registry values are properties of a registry key item.
+
+
+
+
+Trusted documents is for documents with active content i.e. embedded macros. (New-Item "HKLM:\Software\Microsoft\Office\14.0\Security\Trusted Documents\TrustRecords" -Force)
+
+o create a new Windows PowerShell drive, you must supply three parameters:
+
+A Name for the drive (you can use any valid Windows PowerShell name)
+
+The PSProvider (use "FileSystem" for file system locations, "Registry" for registry locations, and it could also be a shared folder on a remote server.)
+
+The Root, that is, the path to the root of the new drive.
+
+
+Create net variable then ap a drive to it :
+  [String]$WebDAVShare = '\\live.sysinternals.com\Tools'          
+New-PSDrive -Name S -PSProvider FileSystem -Root $WebDAVShare   
+cd S:   
+
+
+
+##Alternate Data Steams
+
+  does not change md5 hash of a file
+used to hide data using NTFS
+if you get steam and the stream porperty returns $data there is no ADS
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

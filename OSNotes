@@ -185,7 +185,9 @@ cd S:
 used to hide data using NTFS
 if you get steam and the stream porperty returns $data there is no ADS
 
+##LINUX  ESSENTIALS
 
+ssh -J andy.dwyer@10.50.34.65 @ip
 
 
 

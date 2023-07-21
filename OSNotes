@@ -190,17 +190,96 @@ if you get steam and the stream porperty returns $data there is no ADS
 ssh -J andy.dwyer@10.50.34.65 @ip
 
 
+##WINDOWS BOOT PROCESS
+
+    When booting the OS SYSTEM will always be PID 4
+
+        Display current BCD config:
+
+        bcdedit.exe
+
+    BACKUP BCD Configuration:
+
+        bcdedit /export C:\SAVEDBCD
+
+Services.exe is an area o persistence
+
+get service where object to find the ones running 
+
+##LINUX BOOT PROCESS
+
+ Systemmd is the newer version acronym for startup (big mike got killed in russia)
+
+bootstrap code are first 446 bytes
+
+lsblk list all media
+
+persistence
+
+/etc/environment 
+     and 
+(anytime user logs in with interactive shell will use profile /etc/profile or /etc/profile.d) 
+
+bash profile 
+
+su xxd -l 512 -g 1 /dev/vda  (dumping the mdr to the screen)
+
+dd command (exact copy bit for bit) sudo dd i=/dev/vda of=MBRcopy bs=512 count=1
+
+check services ls -l /etc/rc3.d/  (shows services that computer will run)
+
+
+Process Validity
+
+if dlls been running out of other folder labeled suspicious 
+
+ get-process chrome | foreach {$a} {$_.modules} | more
+
+pseudo ports
+
+##LINUX PROCESSES
+
+There are two primary processes after startup:
+
+    For kernel-space processes [kthreadd] ( PID = 2 )
+
+    For user-space processes /sbin/init ( PID = 1 )
+                                    ^
+Orphan - Parent process exited, adopted by sbin/init with PPID of 1.
+
+    All daemons are orphans
+
+    disown -a && exit # Close a shell/terminal and force all children to be adopted
 
 
 
+##ARTIFACTS, AUDITING,AND LOGGING
+
+    will require using the sid rom a specified user in order to get artifacts 
 
 
+et-wmiobject win32_useraccount | select name,sid (PowerShell)
+
+Get-LocalUser | select Name,SID (PowerShell)
+
+wmic useraccount get name,sid (CMD.EXE ONLY)
+
+prefetch will show proccesses run, allowing for research in exploitation.
+
+##USER ASSIST (GUI ran programs) - difference between prefetch shows if it was ran by a shortcut
+
+    The UserAssist registry key tracks the GUI-based programs that were ran by a particular user.
+
+    View executable Files run
+
+    Get-ItemProperty 'REGISTRY::HKEY_USERS\*\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\UserAssist\{CEBFF5CD-ACE2-4F4F-9178-9926F41749EA}\Count'
+
+    View Shortcut files executed
+
+    Get-ItemProperty 'REGISTRY::HKEY_USERS\*\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\UserAssist\{F4E57C4B-2036-45F0-A9AB-443BCFE33D9F}\Count'
 
 
-
-
-
-
+wmic useraccount where 'suid' get name
 
 
 

@@ -281,6 +281,28 @@ prefetch will show proccesses run, allowing for research in exploitation.
 
 wmic useraccount where 'suid' get name
 
+suspicious ports are something that break a pattern
+
+procs ports by ps -elf 
+
+suspicous processes : abnormally high pid, obfuscate knwon processes with different name, location from where theyre ran.
+
+forms of persistence : cron tabs, run levels, profiles(etc profile), 
+
+netstat
+
+sys internal toold for network autoruns tcpview 
+
+view procs : procmon, tasklist, getprocess
+
+registry, services, (enf of student guide registry 5.4 locations for persistence)
+
+$profile. allusersallhosts read first
+
+powershell get registry: get-childitem, 
+
+will require transfering sysinternals
+
 
 
 

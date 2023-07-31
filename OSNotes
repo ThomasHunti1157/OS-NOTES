@@ -303,7 +303,14 @@ powershell get registry: get-childitem,
 
 will require transfering sysinternals
 
+        Connection Commands:
 
+ssh -J firstusername@firstip secondusername@secondip
+
+
+test hosts
+Windows: 10.50.38.129
+Linux:  10.50.42.159
 
 
 
